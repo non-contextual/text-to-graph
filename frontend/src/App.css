@@ -143,6 +143,7 @@ html, body, #root { height: 100%; background: var(--void); color: var(--t3); fon
 }
 .textarea::placeholder { color: var(--t0); }
 .textarea:focus { background: rgba(61,214,214,0.018); }
+.textarea:focus-visible { box-shadow: inset 0 0 0 1px var(--cyan3); }
 
 .actions {
   display: flex; align-items: center; justify-content: space-between;
@@ -169,6 +170,7 @@ html, body, #root { height: 100%; background: var(--void); color: var(--t3); fon
   box-shadow: 0 0 16px rgba(61,214,214,0.18);
 }
 .btn-exec:disabled { opacity: 0.22; cursor: not-allowed; }
+.btn-exec:focus-visible { border-color: var(--cyan); outline: none; box-shadow: 0 0 0 1px var(--cyan3); }
 .btn-exec.busy { color: var(--t1); border-color: var(--b3); animation: flicker 1.4s ease-in-out infinite; }
 @keyframes flicker { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
 
@@ -235,6 +237,7 @@ html, body, #root { height: 100%; background: var(--void); color: var(--t3); fon
   flex-shrink: 0;
 }
 .btn-back:hover { color: var(--t3); border-color: var(--t2); }
+.btn-back:focus-visible { border-color: var(--t2); outline: none; box-shadow: 0 0 0 1px var(--b3); }
 
 .graph-meta { display: flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 2px; flex: 1; }
 .graph-bar-r { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
@@ -300,6 +303,7 @@ html, body, #root { height: 100%; background: var(--void); color: var(--t3); fon
 }
 .graph-search::placeholder { color: var(--t0); }
 .graph-search:focus { border-color: var(--cyan2); color: var(--t3); }
+.graph-search:focus-visible { box-shadow: 0 0 0 1px var(--cyan3); }
 
 .ctrl-btn {
   position: static;
