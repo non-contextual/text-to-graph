@@ -81,14 +81,14 @@ html, body, #root { height: 100%; background: var(--void); color: var(--t3); fon
 .h-label { font-size: 11px; color: var(--t1); letter-spacing: 1.5px; }
 
 .h-right { display: flex; align-items: center; gap: 8px; }
-.sys-tick { font-size: 10px; color: var(--t0); letter-spacing: 2px; }
+.sys-tick { font-size: 11px; color: var(--t0); letter-spacing: 2px; }
 .sys-dot {
   width: 5px; height: 5px;
   background: var(--cyan);
   animation: pulse 2.4s ease-in-out infinite;
 }
 @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.2; } }
-.sys-status { font-size: 10px; color: var(--cyan2); letter-spacing: 2px; }
+.sys-status { font-size: 11px; color: var(--cyan2); letter-spacing: 2px; }
 
 /* ── main ──────────────────────────────────────── */
 .main { flex: 1; display: flex; overflow: hidden; }
@@ -126,7 +126,7 @@ html, body, #root { height: 100%; background: var(--void); color: var(--t3); fon
   border-right: 1px solid var(--b1);
   min-width: 36px; align-items: center;
   gap: 0;
-  font-size: 10px; color: var(--t0);
+  font-size: 11px; color: var(--t0);
   letter-spacing: 0;
   user-select: none;
   line-height: 1.8;
@@ -180,7 +180,7 @@ html, body, #root { height: 100%; background: var(--void); color: var(--t3); fon
   font-size: 12px; color: #c07070;
 }
 .err-row { display: flex; gap: 10px; align-items: flex-start; }
-.err-hint { font-size: 10px; letter-spacing: 1px; color: var(--t2); padding-left: 2px; }
+.err-hint { font-size: 11px; letter-spacing: 1px; color: var(--t2); padding-left: 2px; }
 .err-tag {
   color: var(--err);
   border: 1px solid var(--err);
@@ -318,9 +318,9 @@ html, body, #root { height: 100%; background: var(--void); color: var(--t3); fon
   clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
   backdrop-filter: blur(8px);
 }
-.d-type  { font-size: 9px; letter-spacing: 3px; margin-bottom: 3px; text-transform: uppercase; }
+.d-type  { font-size: 11px; letter-spacing: 3px; margin-bottom: 3px; text-transform: uppercase; }
 .d-name  { font-family: var(--vt); font-size: 26px; color: var(--t4); letter-spacing: 2px; margin-bottom: 12px; line-height: 1.1; }
-.d-sec   { font-size: 9px; color: var(--t0); letter-spacing: 2px; margin-bottom: 6px; }
+.d-sec   { font-size: 11px; color: var(--t0); letter-spacing: 2px; margin-bottom: 6px; }
 .d-rel   { display: flex; align-items: center; gap: 5px; font-size: 11px; padding: 4px 0; border-bottom: 1px solid var(--b1); }
 .d-rel:last-child { border-bottom: none; }
 .d-arr   { color: var(--t0); flex-shrink: 0; }
@@ -371,7 +371,7 @@ html, body, #root { height: 100%; background: var(--void); color: var(--t3); fon
 .infer-copy {
   background: transparent; border: 1px solid var(--b2);
   color: var(--t0); font-family: var(--mono);
-  font-size: 9px; letter-spacing: 1.5px;
+  font-size: 11px; letter-spacing: 1.5px;
   padding: 2px 8px; cursor: pointer;
   transition: color 0.15s, border-color 0.15s;
 }
@@ -400,14 +400,14 @@ html, body, #root { height: 100%; background: var(--void); color: var(--t3); fon
 .infer-section:last-child { border-bottom: none; }
 
 .infer-sec-label {
-  font-size: 9px; letter-spacing: 2px; color: var(--t0);
+  font-size: 11px; letter-spacing: 2px; color: var(--t0);
   padding: 8px 14px 4px;
   border-bottom: 1px solid var(--b0);
   flex-shrink: 0;
 }
 
 .infer-think {
-  font-size: 10px; line-height: 1.7; color: var(--t0);
+  font-size: 11px; line-height: 1.7; color: var(--t0);
   padding: 10px 14px;
   white-space: pre-wrap; word-break: break-word;
   letter-spacing: 0.2px;
