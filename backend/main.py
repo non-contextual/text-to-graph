@@ -35,6 +35,7 @@ if litellm.api_base and "/" not in MODEL:
 
 # Suppress litellm verbose logging
 litellm.set_verbose = False
+print(f"[intel-hub] model={MODEL}  base={litellm.api_base or 'default'}")
 
 EXTRACT_PROMPT = """你是一个知识图谱构建专家。请对用户文本进行完整的实体关系抽取。
 
@@ -46,14 +47,16 @@ EXTRACT_PROMPT = """你是一个知识图谱构建专家。请对用户文本进
 Person | Organization | Location | Event | Concept | Product | Other
 
 抽取规则：
-1. 穷尽抽取：每个有意义的实体都必须出现，短文≥15节点，长文≥40节点
+1. 穷尽抽取：每个有意义的实体都必须出现，短文≥10节点，长文≥25节点
 2. 人物：所有人名，主次无论
 3. 组织：国家、政府、机构、公司、联盟
 4. 事件：历史事件、条约、战争、谈判、危机
 5. 概念：政策、法案、制裁、外交立场
 6. 关系：每个节点平均≥2条边，描述≤8字
-7. id 连续编号：n1, n2, n3…
-8. 输出必须可以被 JSON.parse() 直接解析，不允许出现任何非 JSON 内容"""
+7. 【层级边必填】人物必须有"任职于/领导/属于"边指向其所属组织；组织必须有"属于/位于"边指向其所属国家或上级机构。不得遗漏。
+8. 【实体去重】同一实体的不同称呼合并为一个节点，取最常用名（如"美国"和"USA"合并为"美国"）
+9. id 连续编号：n1, n2, n3…
+10. 输出必须可以被 JSON.parse() 直接解析，不允许出现任何非 JSON 内容"""
 
 INFER_PROMPT = """你是一名顶级战略分析师。你将收到一份知识图谱数据，请进行深度推断分析。
 
@@ -105,13 +108,40 @@ def extract_json(raw: str) -> dict:
     raise json.JSONDecodeError("No valid JSON found in LLM response", text, 0)
 
 
+def _continue_truncated(partial: str) -> str:
+    """当输出被 max_tokens 截断时，续写剩余 JSON。"""
+    cont = litellm.completion(
+        model=MODEL,
+        max_tokens=4096,
+        messages=[
+            {"role": "system", "content":
+             "你是 JSON 补全助手。用户给你一段被截断的 JSON，"
+             "请从截断处继续输出缺失部分，使整体成为合法 JSON。"
+             "只输出续写内容，不要重复已有内容，不要加任何说明。"},
+            {"role": "user", "content": partial},
+        ],
+    )
+    return partial + cont.choices[0].message.content.strip()
+
+
 async def call_llm_with_retry(messages: list, max_retries: int = 2) -> dict:
     """调用 LLM 并在 JSON 解析失败时自动重试。"""
     last_error = None
     for attempt in range(max_retries + 1):
         try:
-            response = litellm.completion(model=MODEL, messages=messages)
-            raw = response.choices[0].message.content.strip()
+            response = litellm.completion(
+                model=MODEL,
+                messages=messages,
+                max_tokens=8192,
+                response_format={"type": "json_object"},
+            )
+            choice = response.choices[0]
+            raw = choice.message.content.strip()
+
+            # 输出被截断时尝试续写
+            if choice.finish_reason == "length":
+                raw = _continue_truncated(raw)
+
             return extract_json(raw)
         except json.JSONDecodeError as e:
             last_error = e

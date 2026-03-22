@@ -1,25 +1,25 @@
 import { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
 
-// Rain World cold palette — cyan dominant, all variations of the same hue family
 const TYPE_COLORS = {
-  Person:       '#3dd6d6',  // main cyan
-  Organization: '#5aabb8',  // steel teal
-  Location:     '#3d7a90',  // slate
-  Event:        '#aacfdc',  // cold white
-  Concept:      '#208888',  // deep teal
-  Product:      '#7ab8cc',  // ice
-  Other:        '#253848',  // dark ghost
+  Person:       '#3dd6d6',
+  Organization: '#5aabb8',
+  Location:     '#3d7a90',
+  Event:        '#aacfdc',
+  Concept:      '#208888',
+  Product:      '#7ab8cc',
+  Other:        '#253848',
 }
 const getColor = (type) => TYPE_COLORS[type] || TYPE_COLORS.Other
 
-const S = 20 // node half-size (square)
+const S = 20
 
 export default function GraphPanel({ data }) {
-  const svgRef = useRef(null)
-  const simRef = useRef(null)
-  const [selected, setSelected] = useState(null)
+  const svgRef   = useRef(null)
+  const nodeGRef = useRef(null)  // D3 selection ref for search dimming
+  const [selected,   setSelected]   = useState(null)
   const [showLabels, setShowLabels] = useState(true)
+  const [search,     setSearch]     = useState('')
 
   useEffect(() => {
     if (!data || !svgRef.current) return
@@ -28,23 +28,20 @@ export default function GraphPanel({ data }) {
     const edges = data.edges.map(e => ({ ...e }))
 
     const el = svgRef.current
-    const W = el.parentElement.clientWidth
-    const H = el.parentElement.clientHeight
+    const W  = el.parentElement.clientWidth
+    const H  = el.parentElement.clientHeight
 
     d3.select(el).selectAll('*').remove()
 
-    const svg = d3.select(el).attr('width', W).attr('height', H)
+    const svg  = d3.select(el).attr('width', W).attr('height', H)
     const defs = svg.append('defs')
 
-    // Grid bg
     defs.append('pattern').attr('id', 'grid').attr('width', 40).attr('height', 40)
       .attr('patternUnits', 'userSpaceOnUse')
       .call(p => {
         p.append('path').attr('d', 'M40 0L0 0 0 40').attr('fill', 'none')
           .attr('stroke', '#0d1a26').attr('stroke-width', 0.5)
       })
-
-    // Dot accent every 4 cells
     defs.append('pattern').attr('id', 'dotsub').attr('width', 160).attr('height', 160)
       .attr('patternUnits', 'userSpaceOnUse')
       .call(p => {
@@ -56,7 +53,6 @@ export default function GraphPanel({ data }) {
     svg.append('rect').attr('width', W).attr('height', H).attr('fill', 'url(#grid)')
     svg.append('rect').attr('width', W).attr('height', H).attr('fill', 'url(#dotsub)')
 
-    // Arrow marker
     defs.append('marker').attr('id', 'arr').attr('viewBox', '0 -4 8 8')
       .attr('refX', 26).attr('refY', 0)
       .attr('markerWidth', 5).attr('markerHeight', 5)
@@ -68,20 +64,22 @@ export default function GraphPanel({ data }) {
     svg.call(d3.zoom().scaleExtent([0.1, 5])
       .on('zoom', e => g.attr('transform', e.transform)))
 
+    // ── Improved force params for denser graphs ──────────────────────
+    const nodeCount = nodes.length
+    const chargeStr = nodeCount > 30 ? -900 : -650
+    const linkDist  = nodeCount > 30 ? 120  : 150
+
     const sim = d3.forceSimulation(nodes)
-      .force('link', d3.forceLink(edges).id(d => d.id).distance(160))
-      .force('charge', d3.forceManyBody().strength(-550))
-      .force('center', d3.forceCenter(W / 2, H / 2))
-      .force('collide', d3.forceCollide(S + 36))
+      .force('link',    d3.forceLink(edges).id(d => d.id).distance(linkDist))
+      .force('charge',  d3.forceManyBody().strength(chargeStr))
+      .force('center',  d3.forceCenter(W / 2, H / 2))
+      .force('collide', d3.forceCollide(S + 44))
+      .alphaDecay(0.018)   // slower decay → better final layout
 
-    simRef.current = sim
-
-    // Edges
     const link = g.append('g').selectAll('line').data(edges).join('line')
       .attr('stroke', '#162436').attr('stroke-width', 1)
       .attr('marker-end', 'url(#arr)')
 
-    // Edge labels
     const eLabel = g.append('g').selectAll('text').data(edges).join('text')
       .attr('text-anchor', 'middle')
       .attr('font-size', 9).attr('font-family', '"Share Tech Mono", monospace')
@@ -89,7 +87,6 @@ export default function GraphPanel({ data }) {
       .attr('pointer-events', 'none')
       .text(d => d.label)
 
-    // Nodes
     const node = g.append('g').selectAll('g').data(nodes).join('g')
       .style('cursor', 'crosshair')
       .call(d3.drag()
@@ -99,24 +96,18 @@ export default function GraphPanel({ data }) {
       )
       .on('click', (e, d) => { e.stopPropagation(); setSelected(s => s?.id === d.id ? null : d) })
 
-    // Node body: square with cut top-right corner via polygon
     node.append('polygon')
-      .attr('points', d => {
-        const c = getColor(d.type)
-        return `${-S},${-S} ${S-6},${-S} ${S},${-S+6} ${S},${S} ${-S},${S}`
-      })
+      .attr('points', () => `${-S},${-S} ${S-6},${-S} ${S},${-S+6} ${S},${S} ${-S},${S}`)
       .attr('fill', '#050a0f')
       .attr('stroke', d => getColor(d.type))
       .attr('stroke-width', 1)
 
-    // Cut-corner accent line
     node.append('line')
       .attr('x1', S - 6).attr('y1', -S)
       .attr('x2', S).attr('y2', -S + 6)
       .attr('stroke', d => getColor(d.type))
       .attr('stroke-width', 1).attr('opacity', 0.5)
 
-    // Node label
     node.append('text')
       .attr('text-anchor', 'middle').attr('dy', '0.35em')
       .attr('font-size', 10).attr('font-family', '"Share Tech Mono", monospace')
@@ -124,10 +115,11 @@ export default function GraphPanel({ data }) {
       .attr('letter-spacing', 0.5).attr('pointer-events', 'none')
       .text(d => d.label.length > 7 ? d.label.slice(0, 7) : d.label)
 
-    // Type indicator — tiny top-left corner dot
     node.append('rect')
       .attr('x', -S).attr('y', -S).attr('width', 3).attr('height', 3)
       .attr('fill', d => getColor(d.type))
+
+    nodeGRef.current = node
 
     svg.on('click', () => setSelected(null))
 
@@ -145,12 +137,26 @@ export default function GraphPanel({ data }) {
     return () => sim.stop()
   }, [data])
 
+  // Toggle edge labels
   useEffect(() => {
     if (!svgRef.current) return
     d3.select(svgRef.current).selectAll('text')
       .filter(function() { return d3.select(this).attr('font-size') === '9' })
       .attr('visibility', showLabels ? 'visible' : 'hidden')
   }, [showLabels])
+
+  // Search highlight
+  useEffect(() => {
+    if (!nodeGRef.current) return
+    if (!search.trim()) {
+      nodeGRef.current.style('opacity', 1)
+      return
+    }
+    const q = search.toLowerCase()
+    nodeGRef.current.style('opacity', d =>
+      d.label.toLowerCase().includes(q) ? 1 : 0.1
+    )
+  }, [search])
 
   const types = [...new Set(data?.nodes?.map(n => n.type) || [])]
 
@@ -165,9 +171,18 @@ export default function GraphPanel({ data }) {
         ))}
       </div>
 
-      <button className="ctrl-btn" onClick={() => setShowLabels(v => !v)}>
-        {showLabels ? 'LABELS:ON' : 'LABELS:OFF'}
-      </button>
+      <div className="graph-controls">
+        <input
+          className="graph-search"
+          placeholder="// search nodes..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          spellCheck={false}
+        />
+        <button className="ctrl-btn" onClick={() => setShowLabels(v => !v)}>
+          {showLabels ? 'LABELS:ON' : 'LABELS:OFF'}
+        </button>
+      </div>
 
       <svg ref={svgRef} className="graph-svg" />
 
