@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import ReactMarkdown from 'react-markdown'
 import GraphPanel from './components/GraphPanel'
 import './App.css'
 
@@ -115,7 +116,7 @@ function InferPanel({ data, onClose }) {
         <div className="infer-section">
           <div className="infer-sec-label">// ANALYSIS REPORT</div>
           <div className="infer-answer" ref={answerRef}>
-            {answer}
+            <ReactMarkdown>{answer}</ReactMarkdown>
             {status === 'answering' && <span className="infer-cursor">▮</span>}
           </div>
         </div>

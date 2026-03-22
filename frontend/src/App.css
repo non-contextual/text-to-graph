@@ -341,8 +341,69 @@ html, body, #root { height: 100%; background: var(--void); color: var(--t3); fon
   font-size: 12px; line-height: 1.8; color: var(--t3);
   padding: 12px 14px;
   overflow-y: auto; flex: 1;
-  white-space: pre-wrap; word-break: break-word;
+  word-break: break-word;
   letter-spacing: 0.3px;
+}
+
+/* Markdown elements inside the inference panel */
+.infer-answer h1, .infer-answer h2, .infer-answer h3 {
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--cyan);
+  letter-spacing: 1px;
+  margin: 14px 0 6px;
+  text-transform: uppercase;
+}
+.infer-answer h1 { font-size: 13px; border-bottom: 1px solid var(--b2); padding-bottom: 4px; }
+.infer-answer h2 { font-size: 12px; }
+.infer-answer h3 { font-size: 11px; color: var(--t2); }
+
+.infer-answer p { margin: 6px 0; }
+
+.infer-answer ul, .infer-answer ol {
+  padding-left: 18px; margin: 6px 0;
+}
+.infer-answer li { margin: 3px 0; }
+.infer-answer li::marker { color: var(--cyan); }
+
+.infer-answer strong {
+  color: var(--t4);
+  font-weight: normal;
+  letter-spacing: 0.5px;
+}
+
+.infer-answer em { color: var(--t2); font-style: normal; }
+
+.infer-answer code {
+  font-family: 'Share Tech Mono', monospace;
+  background: var(--b1);
+  color: var(--cyan);
+  padding: 1px 5px;
+  font-size: 11px;
+}
+
+.infer-answer pre {
+  background: var(--b0);
+  border: 1px solid var(--b2);
+  padding: 10px 12px;
+  margin: 8px 0;
+  overflow-x: auto;
+}
+.infer-answer pre code {
+  background: none;
+  padding: 0;
+}
+
+.infer-answer hr {
+  border: none;
+  border-top: 1px solid var(--b2);
+  margin: 10px 0;
+}
+
+.infer-answer blockquote {
+  border-left: 2px solid var(--cyan);
+  padding-left: 10px;
+  color: var(--t2);
+  margin: 8px 0;
 }
 
 .infer-cursor {
