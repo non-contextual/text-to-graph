@@ -308,6 +308,11 @@ export default function App() {
               <span className="p-meta">{text.length} chr</span>
             </div>
             <div className="ta-wrap">
+              <div className="ta-gutter">
+                {Array.from({ length: lineCount }, (_, i) => (
+                  <span key={i}>{String(i + 1).padStart(2, '0')}</span>
+                ))}
+              </div>
               <textarea
                 className="textarea"
                 placeholder="// paste any text — news, articles, reports, anything..."
@@ -316,11 +321,6 @@ export default function App() {
                 onKeyDown={e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) analyze() }}
                 spellCheck={false}
               />
-              <div className="ta-gutter">
-                {Array.from({ length: lineCount }, (_, i) => (
-                  <span key={i}>{String(i + 1).padStart(2, '0')}</span>
-                ))}
-              </div>
             </div>
             <div className="actions">
               <span className="hint">ctrl+enter to execute</span>

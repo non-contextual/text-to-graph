@@ -130,6 +130,7 @@ html, body, #root { height: 100%; background: var(--void); color: var(--t3); fon
   letter-spacing: 0;
   user-select: none;
   line-height: 1.8;
+  flex-shrink: 0;
 }
 .textarea {
   flex: 1;
