@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+.venv/
+venv/
+env/
+
+# Environment — NEVER commit API keys
+.env
+.env.*
+!.env.example
+
+# Frontend build
+frontend/dist/
+frontend/dist-ssr/
+frontend/node_modules/
+
+# Editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+
+# Claude Code
+.claude/
+
+# Logs
+*.log
+logs/
