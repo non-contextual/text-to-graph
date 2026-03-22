@@ -148,7 +148,7 @@ html, body, #root { height: 100%; background: var(--void); color: var(--t3); fon
   display: flex; align-items: center; justify-content: space-between;
   padding: 10px 0 0;
 }
-.hint { font-size: 11px; color: var(--t0); letter-spacing: 1px; }
+.hint { font-size: 11px; color: var(--t2); letter-spacing: 1px; }
 
 .btn-exec {
   background: transparent;
