@@ -28,6 +28,11 @@ litellm.api_key  = os.getenv("LLM_API_KEY")  or os.getenv("OPENAI_API_KEY")
 litellm.api_base = os.getenv("LLM_BASE_URL") or os.getenv("OPENAI_BASE_URL")
 MODEL = os.getenv("LLM_MODEL") or os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
+# When using a custom base_url (OpenAI-compatible endpoint like DeepSeek, Qwen, etc.),
+# LiteLLM requires the "openai/" provider prefix to route correctly.
+if litellm.api_base and "/" not in MODEL:
+    MODEL = f"openai/{MODEL}"
+
 # Suppress litellm verbose logging
 litellm.set_verbose = False
 
