@@ -1,8 +1,10 @@
 # INTELHUB
 
-**Paste any text. Get an interactive knowledge graph in seconds.**
+> Read this in: English · [简体中文](./README.zh-CN.md)
+>
+> **Paste any text. Get an interactive knowledge graph in seconds.**
 
-Built for analysts, journalists, and researchers who need to understand complex entity relationships — without spending 20 minutes drawing them by hand.
+Built for analysts, journalists, and researchers who need to understand complex entity relationships, without spending 20 minutes drawing them by hand.
 
 ![input screen](docs/screenshot-input.png)
 
@@ -10,13 +12,13 @@ Built for analysts, journalists, and researchers who need to understand complex 
 
 ## What it does
 
-1. **Extract** — Feed it any text (news articles, intelligence reports, research papers). An LLM extracts all entities and relationships automatically.
-2. **Visualize** — Renders an interactive force graph. Drag nodes, zoom, click to inspect relationships.
-3. **Infer** — Hit the INFERENCE button for a strategic analysis report: power centers, influence paths, hidden patterns, predictions.
+1. **Extract**: Feed it any text (news articles, intelligence reports, research papers). An LLM extracts all entities and relationships automatically.
+2. **Visualize**: Renders an interactive force graph. Drag nodes, zoom, click to inspect relationships.
+3. **Infer**: Hit the INFERENCE button for a strategic analysis report: power centers, influence paths, hidden patterns, predictions.
 
 ![graph view](docs/screenshot-graph.png)
 
-Works with any OpenAI-compatible API — DeepSeek, Qwen, GPT-4o, local models via Ollama, etc.
+Works with any OpenAI-compatible API: DeepSeek, Qwen, GPT-4o, local models via Ollama, etc.
 
 ---
 
@@ -26,7 +28,7 @@ Works with any OpenAI-compatible API — DeepSeek, Qwen, GPT-4o, local models vi
 ```bash
 cd backend
 cp .env.example .env
-# Edit .env — fill in your API key and base URL
+# Edit .env, fill in your API key and base URL
 pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
