@@ -1,4 +1,4 @@
-# INTELHUB
+# Text to Graph
 
 > Read this in: English · [简体中文](./README.zh-CN.md)
 >

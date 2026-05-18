@@ -1,4 +1,4 @@
-# INTELHUB
+# Text to Graph
 
 > 其他语言：[English](./README.md) · 简体中文
 >
